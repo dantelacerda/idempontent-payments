@@ -2,12 +2,12 @@ package com.payments.types;
 
 import com.payments.dto.CardPaymentDto;
 
-public class CreditCardPayment implements PaymentsInterface {
+public class CreditCardPaymentStrategy implements PaymentStrategy {
     private CardPaymentDto cardPayment;
     private String idempotencyKey;
 
 
-    public CreditCardPayment(CardPaymentDto cardPayment) {
+    public CreditCardPaymentStrategy(CardPaymentDto cardPayment) {
         this.cardPayment = cardPayment;
     }
 

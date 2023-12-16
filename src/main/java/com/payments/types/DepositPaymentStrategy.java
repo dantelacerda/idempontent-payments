@@ -2,10 +2,10 @@ package com.payments.types;
 
 import com.payments.dto.DepositDto;
 
-public class DepositPayment implements PaymentsInterface {
+public class DepositPaymentStrategy implements PaymentStrategy {
     private DepositDto depositDto;
 
-    public DepositPayment(DepositDto depositDto) {
+    public DepositPaymentStrategy(DepositDto depositDto) {
         this.depositDto = depositDto;
     }
 

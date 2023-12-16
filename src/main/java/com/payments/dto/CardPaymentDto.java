@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CardPaymentDto {
+public class CardPaymentDto extends PaymentParametersDTO {
     private String paymentId;
     private int cardId;
     private int userId;

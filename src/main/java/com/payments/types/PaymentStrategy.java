@@ -1,5 +1,5 @@
 package com.payments.types;
 
-public interface PaymentsInterface {
+public interface PaymentStrategy {
     void processPayment();
 }

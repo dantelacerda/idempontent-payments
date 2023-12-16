@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class P2PDto {
+public class P2PDto extends PaymentParametersDTO {
     private String transferId;
     private int senderId;
     private int recipientId;

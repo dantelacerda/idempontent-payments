@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DepositDto {
+public class DepositDto extends PaymentParametersDTO{
     private String depositId;
     private int userId;
     private double depositAmount;

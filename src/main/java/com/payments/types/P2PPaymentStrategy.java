@@ -2,10 +2,10 @@ package com.payments.types;
 
 import com.payments.dto.P2PDto;
 
-public class P2PPayment implements PaymentsInterface {
+public class P2PPaymentStrategy implements PaymentStrategy {
     private P2PDto p2PDto;
 
-    public P2PPayment(P2PDto p2PDto) {
+    public P2PPaymentStrategy(P2PDto p2PDto) {
         this.p2PDto = p2PDto;
     }
 
