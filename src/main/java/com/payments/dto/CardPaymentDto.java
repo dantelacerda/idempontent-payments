@@ -3,9 +3,13 @@ package com.payments.dto;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.validation.constraints.NotBlank;
 
 public class CardPaymentDto extends PaymentParametersDTO {
+
+    @NotBlank(message = "PaymentId cannot be blank")
     private String paymentId;
+
     private int cardId;
     private int userId;
     private double paymentAmount;
