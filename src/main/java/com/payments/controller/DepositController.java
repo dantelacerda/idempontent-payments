@@ -21,7 +21,7 @@ import java.util.List;
 public class DepositController {
 
     @Autowired
-    private PaymentsService paymentsService;
+    protected PaymentsService paymentsService;
 
     @PostMapping("/pay")
     public ResponseEntity<String> processPayment(@Valid @RequestBody DepositDto paymentRequest) {
