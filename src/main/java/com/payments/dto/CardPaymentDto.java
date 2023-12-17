@@ -3,12 +3,8 @@ package com.payments.dto;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.validation.constraints.NotBlank;
 
 public class CardPaymentDto extends PaymentParametersDTO {
-
-    @NotBlank(message = "PaymentId cannot be blank")
-    private String paymentId;
 
     private int cardId;
     private int userId;
@@ -19,14 +15,6 @@ public class CardPaymentDto extends PaymentParametersDTO {
     private String merchantName;
     private int merchantId;
     private int mccCode;
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
-    }
 
     public int getCardId() {
         return cardId;

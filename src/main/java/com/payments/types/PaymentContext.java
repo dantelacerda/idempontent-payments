@@ -4,6 +4,7 @@ import com.payments.dto.CardPaymentDto;
 import com.payments.dto.DepositDto;
 import com.payments.dto.P2PDto;
 import com.payments.dto.PaymentParametersDTO;
+import com.payments.util.Constants;
 
 public class PaymentContext {
     private PaymentStrategy paymentStrategy;
@@ -21,11 +22,11 @@ public class PaymentContext {
     }
 
     public void setPaymentStrategyFromFactory(String strategyType, PaymentParametersDTO parameter) {
-        if ("credit_card".equalsIgnoreCase(strategyType)) {
+        if (Constants.CREDIT_CARD_PAYMENT_TYPE.equalsIgnoreCase(strategyType)) {
             setPaymentStrategy(PaymentStrategyFactory.createCreditCardPaymentStrategy((CardPaymentDto) parameter));
-        } else if ("deposit".equalsIgnoreCase(strategyType)) {
+        } else if (Constants.DEPOSIT_PAYMENT_TYPE.equalsIgnoreCase(strategyType)) {
             setPaymentStrategy(PaymentStrategyFactory.createDepositPaymentStrategy((DepositDto) parameter));
-        } else if ("p2p".equalsIgnoreCase(strategyType)) {
+        } else if (Constants.P2P_PAYMENT_TYPE.equalsIgnoreCase(strategyType)) {
             setPaymentStrategy(PaymentStrategyFactory.createP2PPaymentStrategy((P2PDto) parameter));
         }
     }

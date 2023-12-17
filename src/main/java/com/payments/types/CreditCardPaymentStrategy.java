@@ -1,11 +1,11 @@
 package com.payments.types;
 
 import com.payments.dto.CardPaymentDto;
+import com.payments.repository.PaymentsRepository;
+import com.payments.util.Constants;
 
 public class CreditCardPaymentStrategy implements PaymentStrategy {
     private CardPaymentDto cardPayment;
-    private String idempotencyKey;
-
 
     public CreditCardPaymentStrategy(CardPaymentDto cardPayment) {
         this.cardPayment = cardPayment;
@@ -13,8 +13,10 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
 
     @Override
     public void processPayment() {
-        // Implement credit card payment processing logic
-        System.out.println("Processing craedit card payment with card number: " + cardPayment.getCardId());
+        System.out.println("Processing credit card payment with card number: " + cardPayment.getCardId());
+        cardPayment.setPaymentType(Constants.CREDIT_CARD_PAYMENT_TYPE);
+        cardPayment.setPaymentId(cardPayment.getPaymentId());
+        PaymentsRepository.getInstance().processPayment(cardPayment);
     }
 
 //    {
