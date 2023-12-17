@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class DepositDto extends PaymentParametersDTO{
     @JsonProperty("deposit_id")
@@ -79,9 +80,10 @@ public class DepositDto extends PaymentParametersDTO{
     }
 
     public void setCreatedAt(String createdAt) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            this.createdAt = dateFormat.parse(createdAt);
+            SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            this.createdAt = isoFormatter.parse(createdAt);
         } catch (ParseException e) {
             e.printStackTrace(); // Handle parsing exception as needed
         }
