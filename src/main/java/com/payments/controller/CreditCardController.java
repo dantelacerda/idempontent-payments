@@ -60,7 +60,7 @@ public class CreditCardController {
     }
 
     @GetMapping("/list_flux")
-    public Flux<PaymentParametersDTO> getAllItems() {
+    public Flux<PaymentParametersDTO> getPaymentsFlux() {
         List<PaymentParametersDTO> payments = paymentsService.fetchPaymentListByType(Constants.CREDIT_CARD_PAYMENT_TYPE);
         return Flux.fromIterable(payments);
     }

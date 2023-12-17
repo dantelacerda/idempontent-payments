@@ -60,7 +60,7 @@ public class P2PController {
     }
 
     @GetMapping("/list_flux")
-    public Flux<PaymentParametersDTO> getAllItems() {
+    public Flux<PaymentParametersDTO> getPaymentsFlux() {
         List<PaymentParametersDTO> payments = paymentsService.fetchPaymentListByType(Constants.P2P_PAYMENT_TYPE);
         return Flux.fromIterable(payments);
     }

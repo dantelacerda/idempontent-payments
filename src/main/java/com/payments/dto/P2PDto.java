@@ -1,17 +1,36 @@
 package com.payments.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class P2PDto extends PaymentParametersDTO {
+    @JsonProperty("transfer_id")
     private String transferId;
+
+    @JsonProperty("sender_id")
     private int senderId;
+
+    @JsonProperty("recipient_id")
     private int recipientId;
+
+    @JsonProperty("transfer_amount")
     private double transferAmount;
+
+    @JsonProperty("transfer_currency")
     private String transferCurrency;
+
+    @JsonProperty("status")
     private String status;
+
+    @JsonProperty("comment")
     private String comment;
+
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
 
     public String getTransferId() {

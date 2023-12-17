@@ -60,7 +60,7 @@ public class DepositController {
     }
 
     @GetMapping("/list_flux")
-    public Flux<PaymentParametersDTO> getAllItems() {
+    public Flux<PaymentParametersDTO> getPaymentsFlux() {
         List<PaymentParametersDTO> payments = paymentsService.fetchPaymentListByType(Constants.DEPOSIT_PAYMENT_TYPE);
         return Flux.fromIterable(payments);
     }

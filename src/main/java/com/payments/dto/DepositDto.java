@@ -1,17 +1,37 @@
 package com.payments.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DepositDto extends PaymentParametersDTO{
+    @JsonProperty("deposit_id")
     private String depositId;
+
+    @JsonProperty("user_id")
     private int userId;
+
+    @JsonProperty("deposit_amount")
     private double depositAmount;
+
+    @JsonProperty("deposit_currency")
     private String depositCurrency;
+
+    @JsonProperty("status")
     private String status;
+
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
+
+    @JsonProperty("expires_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date expiresAt;
+
+    @JsonProperty("payment_method_code")
     private String paymentMethodCode;
 
     public String getDepositId() {

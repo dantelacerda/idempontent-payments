@@ -1,9 +1,6 @@
 package com.payments.service;
 
-import com.payments.dto.CardPaymentDto;
-import com.payments.dto.DepositDto;
-import com.payments.dto.P2PDto;
-import com.payments.dto.PaymentParametersDTO;
+import com.payments.dto.*;
 import com.payments.repository.PaymentsRepository;
 import com.payments.types.PaymentContext;
 import com.payments.util.Constants;
@@ -31,21 +28,6 @@ public class PaymentsService {
         });
 
         return processedPayments;
-    }
-
-    public ResponseEntity<String> handleError(List<PaymentParametersDTO> payments) {
-
-        if (this.filterValidPayments(payments).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your payment(s) couldn't be processed. You are missing the PaymentIds.");
-        } else if (this.filterOnlyNotProcessedPayments(payments).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment(s) already processed. Check your status again in some minutes.");
-        }
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
-    }
-
-    public boolean validateList(List<PaymentParametersDTO> paymentList) {
-        return (!this.filterValidPayments(paymentList).isEmpty() && !this.filterOnlyNotProcessedPayments(paymentList).isEmpty());
     }
 
     public List<PaymentParametersDTO> filterValidPayments(List<PaymentParametersDTO> payments) {
@@ -95,10 +77,65 @@ public class PaymentsService {
                                         paymentType.equals(Constants.P2P_PAYMENT_TYPE) ? (obj instanceof P2PDto) :
                                                 null
                 ))
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
         return filteredByType;
+    }
 
+    public Set<PaymentParametersDTO> fetchAllPayments() {
+        Set<PaymentParametersDTO> payments = PaymentsRepository.getInstance().listAllPayments();
 
+        return payments;
+    }
+
+    public List<PaymentResumeDTO> fetchPaymentsResume() {
+        Set<PaymentParametersDTO> payments = PaymentsRepository.getInstance().listAllPayments();
+        List<PaymentResumeDTO> paymentsResume = payments.stream()
+                .map(originalObj -> new PaymentResumeDTO(originalObj))
+                .collect(Collectors.toList());
+
+        return paymentsResume;
+    }
+
+    public boolean validateList(List<PaymentParametersDTO> paymentList) {
+        return (!this.filterValidPayments(paymentList).isEmpty() && !this.filterOnlyNotProcessedPayments(paymentList).isEmpty());
+    }
+
+    public PaymentResumeDTO updatePayment(String idPayment, String status) {
+
+        Set<PaymentParametersDTO> payments = PaymentsRepository.getInstance().listAllPayments();
+        PaymentResumeDTO resume = null;
+        for (PaymentParametersDTO item : payments) {
+            if (item instanceof CardPaymentDto) {
+                CardPaymentDto card = (CardPaymentDto) item;
+                if (card.getPaymentId().equals(idPayment)) {
+                    card.setStatus(status);
+                }
+            } else if (item instanceof DepositDto) {
+                DepositDto deposit = (DepositDto) item;
+                if (deposit.getDepositId().equals(idPayment)) {
+                    deposit.setStatus(status);
+                }
+            } else if (item instanceof P2PDto) {
+                P2PDto p2p = (P2PDto) item;
+                if (p2p.getTransferId().equals(idPayment)) {
+                    p2p.setStatus(status);
+                }
+            }
+            resume = new PaymentResumeDTO(item);
+        }
+
+        return resume;
+    }
+
+    public ResponseEntity<String> handleError(List<PaymentParametersDTO> payments) {
+
+        if (this.filterValidPayments(payments).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your payment(s) couldn't be processed. You are missing the PaymentIds.");
+        } else if (this.filterOnlyNotProcessedPayments(payments).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment(s) already processed. Check your status again in some minutes.");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
     }
 
 
