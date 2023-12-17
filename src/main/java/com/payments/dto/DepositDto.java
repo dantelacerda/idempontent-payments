@@ -94,9 +94,11 @@ public class DepositDto extends PaymentParametersDTO{
     }
 
     public void setExpiresAt(String expiresAt) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         try {
-            this.expiresAt = dateFormat.parse(expiresAt);
+            SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            this.expiresAt = isoFormatter.parse(expiresAt);
         } catch (ParseException e) {
             e.printStackTrace(); // Handle parsing exception as needed
         }

@@ -50,6 +50,8 @@ public class PaymentResumeDTO {
         }
     }
 
+    public PaymentResumeDTO(){}
+
     public PaymentResumeDTO(String paymentId, String paymentType, String paymentStatus,
                       double transferAmount, String transferCurrency, Date createdAt) {
         this.paymentId = paymentId;
