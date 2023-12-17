@@ -1,6 +1,8 @@
 package com.payments.types;
 
 import com.payments.dto.P2PDto;
+import com.payments.repository.PaymentsRepository;
+import com.payments.util.Constants;
 
 public class P2PPaymentStrategy implements PaymentStrategy {
     private P2PDto p2PDto;
@@ -12,7 +14,10 @@ public class P2PPaymentStrategy implements PaymentStrategy {
     @Override
     public void processPayment() {
         // Implement credit card payment processing logic
-        System.out.println("Processing P2P payment with status: " + p2PDto.getStatus());
+        System.out.println("Processing P2P payment with id: " + p2PDto.getTransferId());
+        p2PDto.setPaymentType(Constants.P2P_PAYMENT_TYPE);
+        p2PDto.setPaymentId(p2PDto.getTransferId());
+        PaymentsRepository.getInstance().processPayment(p2PDto);
     }
 }
 

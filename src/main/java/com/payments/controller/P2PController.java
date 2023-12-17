@@ -1,6 +1,6 @@
 package com.payments.controller;
 
-import com.payments.dto.CardPaymentDto;
+import com.payments.dto.P2PDto;
 import com.payments.dto.PaymentParametersDTO;
 import com.payments.service.PaymentsService;
 import com.payments.util.Constants;
@@ -16,18 +16,18 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/credit_card")
+@RequestMapping("/p2p")
 @Validated
-public class CreditCardController {
+public class P2PController {
 
     @Autowired
     private PaymentsService paymentsService;
 
     @PostMapping("/pay")
-    public ResponseEntity<String> processPayment(@Valid @RequestBody CardPaymentDto paymentRequest) {
+    public ResponseEntity<String> processPayment(@Valid @RequestBody P2PDto paymentRequest) {
 
         if (paymentsService.validateList(Arrays.asList(paymentRequest))) {
-            paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(paymentRequest));
+            paymentsService.processBatchPayments(Constants.P2P_PAYMENT_TYPE, Arrays.asList(paymentRequest));
             return ResponseEntity.ok("Payment processed successfully.");
 
         } else {
@@ -37,12 +37,12 @@ public class CreditCardController {
     }
 
     @PostMapping("/batch_payment")
-    public ResponseEntity<String> processListPayment(@RequestBody List<CardPaymentDto> paymentsRequest) {
+    public ResponseEntity<String> processListPayment(@RequestBody List<P2PDto> paymentsRequest) {
 
         List<PaymentParametersDTO> convertedList = (List<PaymentParametersDTO>) (List<?>) paymentsRequest;
 
         if (paymentsService.validateList(convertedList)) {
-            int processed = paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, convertedList);
+            int processed = paymentsService.processBatchPayments(Constants.P2P_PAYMENT_TYPE, convertedList);
 
             return ResponseEntity.ok("You sent " + convertedList.size() + " payment(s). " + processed +
                     " Of those might be processed. " + (convertedList.size() - processed) + " were already processed or contain errors.");
@@ -55,13 +55,13 @@ public class CreditCardController {
 
     @GetMapping("/list")
     public ResponseEntity<List<PaymentParametersDTO>> getAllPayments() {
-        List<PaymentParametersDTO> payments = paymentsService.fetchPaymentListByType(Constants.CREDIT_CARD_PAYMENT_TYPE);
+        List<PaymentParametersDTO> payments = paymentsService.fetchPaymentListByType(Constants.P2P_PAYMENT_TYPE);
         return ResponseEntity.ok(payments);
     }
 
     @GetMapping("/list_flux")
     public Flux<PaymentParametersDTO> getAllItems() {
-        List<PaymentParametersDTO> payments = paymentsService.fetchPaymentListByType(Constants.CREDIT_CARD_PAYMENT_TYPE);
+        List<PaymentParametersDTO> payments = paymentsService.fetchPaymentListByType(Constants.P2P_PAYMENT_TYPE);
         return Flux.fromIterable(payments);
     }
 

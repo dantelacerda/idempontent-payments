@@ -1,6 +1,8 @@
 package com.payments.types;
 
 import com.payments.dto.DepositDto;
+import com.payments.repository.PaymentsRepository;
+import com.payments.util.Constants;
 
 public class DepositPaymentStrategy implements PaymentStrategy {
     private DepositDto depositDto;
@@ -12,7 +14,10 @@ public class DepositPaymentStrategy implements PaymentStrategy {
     @Override
     public void processPayment() {
         // Implement credit card payment processing logic
-        System.out.println("Processing payment by deposit with status: " + depositDto.getStatus());
+        System.out.println("Processing payment by deposit with id: " + depositDto.getDepositId());
+        depositDto.setPaymentType(Constants.DEPOSIT_PAYMENT_TYPE);
+        depositDto.setPaymentId(depositDto.getDepositId());
+        PaymentsRepository.getInstance().processPayment(depositDto);
     }
 }
 

@@ -13,9 +13,8 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
 
     @Override
     public void processPayment() {
-        System.out.println("Processing credit card payment with card number: " + cardPayment.getCardId());
+        System.out.println("Processing credit card payment with id: " + cardPayment.getPaymentId());
         cardPayment.setPaymentType(Constants.CREDIT_CARD_PAYMENT_TYPE);
-        cardPayment.setPaymentId(cardPayment.getPaymentId());
         PaymentsRepository.getInstance().processPayment(cardPayment);
     }
 
