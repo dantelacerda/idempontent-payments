@@ -45,18 +45,44 @@
 That project covers three Payment forms.One for deposits (top-ups),
 one for users, one for card payments. With that project you can face the emerging challenge of aggregating and organizing user
 activities from different sources.
-This projects’s goal is to provide an API to users create their payments and be able to consume it eighter by type or all together.
+This projects’s goal is to provide an API to users create their payments and be able to consume it eighter by type or all together. Some important insights about the project will be given on next steps.
 
+- Scalable with Spring Webflux
+
+  
 The chery on pie is that even if the project scales a million times, the performance will remain the same. I'm using Spring Webflux to return my data in all controllers on @Get requests that has "list_flux". Spring WebFlux is a suitable option for applications that require concurrency, efficiency in handling multiple requests with less resources, and scalability. How does it work?
 
 ![image](https://github.com/dantelacerda/idempontent-payments/assets/21350677/db789d02-2c1a-4ee1-9f05-212ab55eaf06)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+- Easy to aggregate new Payment Types with Strategy Design Pattern
+
+
 Besides that, Its easy to keep evolving the project since all the logic used to build to define which type of Payment would be used is defined using a Design Pattern called Strategy! Strategy design pattern is one of the behavioral design pattern. Strategy pattern is used when we have multiple algorithm for a specific task and client decides the actual implementation to be used at runtime. On the incoming example we can see exactly what we would have to do if we wanted to add Bitcoin or Paypal Payment type to our project
 
 ![image](https://github.com/dantelacerda/idempontent-payments/assets/21350677/d0e7879b-a87d-4727-9a1f-5d8c007c2c46)
 
+
+- Idempontent Requests
+
+
+On that project we have a simple Idempontency rule added on creation payments requests. Idempotency in the context of payments refers to the property of an operation where performing the operation multiple times has the same effect as performing it once. In other words, if you submit the same request multiple times, the system's response should be the same as if you had submitted it only once.
+
+The rules that has been added are:
+* Client side MUST provide an Idempontent Key passed on @RequestHeader("Idempotency-Key") within that name.
+* You can just do your operation once per key. Even though its Batched or Individual payment.
+  * If you try sending the same key on other operations, you will receive the message: "Payment(s) already processed."
+* If you try sending a different key but your payment informations are the same (just validating the payment_id, deposit_id and transfer_id) you will receive the message: You processed a payment with same informations some time ago. Possibly a Fraud(Gonna add more validations on future)."
+
+Don't forget you can check all about the requests on <a href="#usage">Usage</a> Section!
+
+
+
+- Data Storage
+
+
+To make this project easier to execute and less dependant, I'm not using any database! All the data are being saved on a final Set<Object> managed by a Singleton Instance on a Repository. This way, everytime you run the project, your inserted data is lost. Then its all on runtime! #keepThingSimple
 ### Built With
 
 * Java
@@ -186,37 +212,9 @@ Project Link: [https://github.com/dantelacerda/idempontent-payments](https://git
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/dantelacerda/
-[product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com
 [Java-url]: https://www.java.com/pt-BR/
 [Java-badge]: https://www.oracle.com/a/tech/img/rc10-java-badge-3.png
 [Springboot-url]: https://spring.io/projects/spring-boot
