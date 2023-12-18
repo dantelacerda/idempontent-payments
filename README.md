@@ -138,6 +138,8 @@ After starting the project, you can go use postman or cUrl to make requests. On 
   * same operations as above but changing deposit for p2p
 * Reconciliate
   * Reconciliate your payments by sending a CSV file with data separated by "|" and being read by lines. That operation is on: http://localhost:8080/reconciliate/file
+    * Note 1: This Reconciliate method only check if the payments sent on file has been already inserted. In case it doesn't, it removes from system.
+    * Note 2: The Reconciliation File was just programmed to read the first two fields, being the First the payment_id and the second is the payment_type. Example:   1234|DEPOSIT|YOU_CAN_ADD_MORE_FIELDS_BUT_WILL_BE_IGNORED
 * Full Payment Operations
   * Here you can list all the payments that has been saved on  http://localhost:8080/payments/list_full
   * You can also get a resume of payments with only common fields between all payments on http://localhost:8080/payments/list_resume
