@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class PaymentsService {
 
-    public int processBatchPayments(String paymentType, List<PaymentParametersDTO> payments) {
+    public int processBatchPayments(String paymentType, List<PaymentParametersDTO> payments, String idempontentId) {
 
         List<PaymentParametersDTO> validPaymentsToProccess = this.fetchOnlyValidPaymentsToProcess(payments);
         PaymentContext context = new PaymentContext();
@@ -27,6 +27,7 @@ public class PaymentsService {
             context.processPayment();
         });
 
+        PaymentsRepository.getInstance().addIdempontentId(idempontentId);
         return processedPayments;
     }
 
@@ -100,6 +101,10 @@ public class PaymentsService {
         return (!this.filterValidPayments(paymentList).isEmpty() && !this.filterOnlyNotProcessedPayments(paymentList).isEmpty());
     }
 
+    public boolean hasBeenProcessed(String idempontentKey) {
+        return PaymentsRepository.getInstance().listExecutedOperations().contains(idempontentKey);
+    }
+
     public PaymentResumeDTO updatePayment(String idPayment, String status) {
 
         Set<PaymentParametersDTO> payments = PaymentsRepository.getInstance().listAllPayments();
@@ -127,12 +132,14 @@ public class PaymentsService {
         return resume;
     }
 
-    public ResponseEntity<String> handleError(List<PaymentParametersDTO> payments) {
+    public ResponseEntity<String> handleError(List<PaymentParametersDTO> payments, String idempotencyKey) {
 
-        if (this.filterValidPayments(payments).isEmpty()) {
+        if(hasBeenProcessed(idempotencyKey)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment(s) already processed.");
+        } else if (this.filterValidPayments(payments).isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your payment(s) couldn't be processed. You are missing the PaymentIds.");
         } else if (this.filterOnlyNotProcessedPayments(payments).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment(s) already processed. Check your status again in some minutes.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You processed a payment with same informations some time ago. Possibly a Fraud(Gonna add more validations on future).");
         }
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");

@@ -24,31 +24,30 @@ public class CreditCardController {
     protected PaymentsService paymentsService;
 
     @PostMapping("/pay")
-    public ResponseEntity<String> processPayment(@Valid @RequestBody CardPaymentDto paymentRequest) {
+    public ResponseEntity<String> processPayment(@Valid @RequestHeader("Idempotency-Key") String idempotencyKey, @RequestBody CardPaymentDto paymentRequest) {
 
-        if (paymentsService.validateList(Arrays.asList(paymentRequest))) {
-            paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(paymentRequest));
-            return ResponseEntity.ok("Payment processed successfully.");
-
+        if (paymentsService.hasBeenProcessed(idempotencyKey) || !paymentsService.validateList(Arrays.asList(paymentRequest))) {
+            return paymentsService.handleError(Arrays.asList(paymentRequest), idempotencyKey);
         } else {
-            return paymentsService.handleError(Arrays.asList(paymentRequest));
+            paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(paymentRequest), idempotencyKey);
+            return ResponseEntity.ok("Payment processed successfully.");
         }
 
     }
 
     @PostMapping("/batch_payment")
-    public ResponseEntity<String> processListPayment(@RequestBody List<CardPaymentDto> paymentsRequest) {
+    public ResponseEntity<String> processListPayment(@RequestHeader("Idempotency-Key") String idempotencyKey, @RequestBody List<CardPaymentDto> paymentsRequest) {
 
         List<PaymentParametersDTO> convertedList = (List<PaymentParametersDTO>) (List<?>) paymentsRequest;
 
-        if (paymentsService.validateList(convertedList)) {
-            int processed = paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, convertedList);
+        if (paymentsService.hasBeenProcessed(idempotencyKey) || !paymentsService.validateList(convertedList)) {
+            return paymentsService.handleError(convertedList, idempotencyKey);
+        } else {
+            int processed = paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, convertedList, idempotencyKey);
 
             return ResponseEntity.ok("You sent " + convertedList.size() + " payment(s). " + processed +
                     " Of those might be processed. " + (convertedList.size() - processed) + " were already processed or contain errors.");
 
-        } else {
-            return paymentsService.handleError(convertedList);
         }
 
     }

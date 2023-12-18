@@ -24,7 +24,7 @@ class CardPaymentDtoTest {
                 "\"payment_amount\":10.0," +
                 "\"payment_currency\":\"USD\"," +
                 "\"status\":\"COMPLETED\"," +
-                "\"created_at\":\"2023-12-17T18:47:20.862Z\"," +
+                "\"created_at\":\"2023-12-17 18:47:20\"," +
                 "\"merchant_name\":\"Example Merchant\"," +
                 "\"merchant_id\":987," +
                 "\"mcc_code\":1234" +
@@ -42,9 +42,9 @@ class CardPaymentDtoTest {
         assertEquals("USD", cardPaymentDto.getPaymentCurrency());
         assertEquals("COMPLETED", cardPaymentDto.getStatus());
 
-        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        assertEquals("2023-12-17T18:47:20.862Z", isoFormatter.format(cardPaymentDto.getCreatedAt()));
+        assertEquals("2023-12-17 18:47:20", isoFormatter.format(cardPaymentDto.getCreatedAt()));
 
         assertEquals("Example Merchant", cardPaymentDto.getMerchantName());
         assertEquals(987, cardPaymentDto.getMerchantId());
@@ -62,9 +62,9 @@ class CardPaymentDtoTest {
         cardPaymentDto.setPaymentCurrency("EUR");
         cardPaymentDto.setStatus("PENDING");
 
-        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date createdAt = isoFormatter.parse("2023-12-17T18:47:20.862Z");
+        Date createdAt = isoFormatter.parse("2023-12-17 18:47:20");
 
         cardPaymentDto.setCreatedAt(isoFormatter.format(createdAt));
 

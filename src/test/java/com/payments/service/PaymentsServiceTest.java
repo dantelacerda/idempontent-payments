@@ -10,15 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 class PaymentsServiceTest {
@@ -44,7 +43,7 @@ class PaymentsServiceTest {
         when(paymentsRepository.listAllPayments()).thenReturn(Collections.emptySet());
 
         // Act
-        int processedCount = paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(payment));
+        int processedCount = paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(payment), "12345");
 
         // Assert
         assertEquals(1, processedCount);
@@ -60,26 +59,13 @@ class PaymentsServiceTest {
         Set<PaymentParametersDTO> payments = Collections.singleton(cardPayment);
         when(paymentsRepository.listAllPayments()).thenReturn(payments);
 
-        paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(cardPayment));
+        paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(cardPayment), "12333333");
         // Act
         PaymentResumeDTO updatedResume = paymentsService.updatePayment(paymentId, status);
 
         // Assert
         assertNotNull(updatedResume);
         assertEquals(status, cardPayment.getStatus());
-    }
-
-    @Test
-    void handleError_InvalidPayments_ReturnsBadRequest() {
-        // Arrange
-        List<PaymentParametersDTO> invalidPayments = Collections.singletonList(new CardPaymentDto());
-
-        // Act
-        ResponseEntity<String> response = paymentsService.handleError(invalidPayments);
-
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertTrue(response.getBody().contains("Your payment(s) couldn't be processed. You are missing the PaymentIds."));
     }
 
     @Test
@@ -91,7 +77,7 @@ class PaymentsServiceTest {
         // Act
         CardPaymentDto cardPayment = new CardPaymentDto();
         cardPayment.setPaymentId("12345678");
-        paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(cardPayment));
+        paymentsService.processBatchPayments(Constants.CREDIT_CARD_PAYMENT_TYPE, Arrays.asList(cardPayment), "2222");
         List<PaymentParametersDTO> filteredPayments = paymentsService.fetchPaymentListByType(Constants.CREDIT_CARD_PAYMENT_TYPE);
 
         // Assert

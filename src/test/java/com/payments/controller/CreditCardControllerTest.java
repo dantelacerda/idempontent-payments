@@ -42,7 +42,7 @@ public class CreditCardControllerTest {
         String jsonPayload = objectMapper.writeValueAsString(payment);
 
         when(paymentsService.validateList(anyList())).thenReturn(true);
-        when(paymentsService.processBatchPayments(eq(Constants.CREDIT_CARD_PAYMENT_TYPE), anyList())).thenReturn(1);
+        when(paymentsService.processBatchPayments(eq(Constants.CREDIT_CARD_PAYMENT_TYPE), anyList(), anyString())).thenReturn(1);
 
         creditCardController = new CreditCardController();
         creditCardController.paymentsService = paymentsService;
@@ -51,13 +51,14 @@ public class CreditCardControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/credit_card/pay")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonPayload))
+                .content(jsonPayload)
+                .header("Idempotency-Key", "yourIdempotencyKey1")) // Add this line)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Payment processed successfully."));
 
 
         verify(paymentsService, times(1)).validateList(anyList());
-        verify(paymentsService, times(1)).processBatchPayments(eq(Constants.CREDIT_CARD_PAYMENT_TYPE), anyList());
+        verify(paymentsService, times(1)).processBatchPayments(eq(Constants.CREDIT_CARD_PAYMENT_TYPE), anyList(), anyString());
     }
 
     @Test
@@ -70,7 +71,7 @@ public class CreditCardControllerTest {
         String jsonPayload = objectMapper.writeValueAsString(Arrays.asList(payment));
 
         when(paymentsService.validateList(anyList())).thenReturn(true);
-        when(paymentsService.processBatchPayments(eq(Constants.CREDIT_CARD_PAYMENT_TYPE), anyList())).thenReturn(1);
+        when(paymentsService.processBatchPayments(eq(Constants.CREDIT_CARD_PAYMENT_TYPE), anyList(), anyString())).thenReturn(1);
 
         creditCardController = new CreditCardController();
         creditCardController.paymentsService = paymentsService;
@@ -79,12 +80,13 @@ public class CreditCardControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/credit_card/batch_payment")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonPayload))
+                .content(jsonPayload)
+                .header("Idempotency-Key", "yourIdempotencyKey2")) // Add this line)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("You sent 1 payment(s). 1 Of those might be processed. 0 were already processed or contain errors."));
 
         verify(paymentsService, times(1)).validateList(anyList());
-        verify(paymentsService, times(1)).processBatchPayments(eq(Constants.CREDIT_CARD_PAYMENT_TYPE), anyList());
+        verify(paymentsService, times(1)).processBatchPayments(eq(Constants.CREDIT_CARD_PAYMENT_TYPE), anyList(), anyString());
     }
 
     @Test

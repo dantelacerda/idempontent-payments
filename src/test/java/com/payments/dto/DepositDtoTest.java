@@ -23,10 +23,10 @@ public class DepositDtoTest {
         depositDto.setStatus("PENDING");
 
 
-        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date createdAt = isoFormatter.parse("2023-12-17T18:47:20.862Z");
-        Date expiresAt = isoFormatter.parse("2025-12-17T18:47:20.862Z");
+        Date createdAt = isoFormatter.parse("2023-12-17 18:47:20");
+        Date expiresAt = isoFormatter.parse("2025-12-17 18:47:20");
 
         depositDto.setCreatedAt(isoFormatter.format(createdAt));
 
@@ -38,7 +38,7 @@ public class DepositDtoTest {
         String jsonString = new ObjectMapper().writeValueAsString(depositDto);
 
         // Expected JSON string
-        String expectedJson = "{\"deposit_id\":\"789012\",\"user_id\":456,\"deposit_amount\":12.99,\"deposit_currency\":\"GBP\",\"status\":\"PENDING\",\"created_at\":\"2023-12-02T13:54:30.000Z\",\"expires_at\":\"2023-12-04T13:54:30.000Z\",\"payment_method_code\":\"BANK_TRANSFER\"}";
+        String expectedJson = "{\"deposit_id\":\"789012\",\"user_id\":456,\"deposit_amount\":12.99,\"deposit_currency\":\"GBP\",\"status\":\"PENDING\",\"created_at\":\"2023-12-02 13:54:30\",\"expires_at\":\"2023-12-04 13:54:30\",\"payment_method_code\":\"BANK_TRANSFER\"}";
 
         // Assert that the generated JSON matches the expected JSON
 
@@ -48,7 +48,7 @@ public class DepositDtoTest {
     @Test
     public void testDeserialization() throws Exception {
         // Expected JSON string
-        String json = "{\"deposit_id\":\"789012\",\"user_id\":456,\"deposit_amount\":12.99,\"deposit_currency\":\"GBP\",\"status\":\"PENDING\",\"created_at\":\"2023-12-02T13:54:30.000Z\",\"expires_at\":\"2023-12-04T13:54:30.000Z\",\"payment_method_code\":\"BANK_TRANSFER\"}";
+        String json = "{\"deposit_id\":\"789012\",\"user_id\":456,\"deposit_amount\":12.99,\"deposit_currency\":\"GBP\",\"status\":\"PENDING\",\"created_at\":\"2023-12-02 13:54:30\",\"expires_at\":\"2023-12-04 13:54:30\",\"payment_method_code\":\"BANK_TRANSFER\"}";
 
         // Convert JSON string to DepositDto object
         DepositDto depositDto = new ObjectMapper().readValue(json, DepositDto.class);
@@ -60,10 +60,10 @@ public class DepositDtoTest {
         assertEquals("GBP", depositDto.getDepositCurrency());
         assertEquals("PENDING", depositDto.getStatus());
 
-        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        assertEquals("2023-12-02T13:54:30.000Z", isoFormatter.format(depositDto.getCreatedAt()));
-        assertEquals("2023-12-04T13:54:30.000Z", isoFormatter.format(depositDto.getExpiresAt()));
+        assertEquals("2023-12-02 13:54:30", isoFormatter.format(depositDto.getCreatedAt()));
+        assertEquals("2023-12-04 13:54:30", isoFormatter.format(depositDto.getExpiresAt()));
 
         assertEquals("BANK_TRANSFER", depositDto.getPaymentMethodCode());
     }

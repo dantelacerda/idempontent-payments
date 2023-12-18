@@ -32,9 +32,9 @@ public class P2PDtoTest {
         p2pDto.setStatus(status);
         p2pDto.setComment(comment);
 
-        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date createdAt = isoFormatter.parse("2023-12-17T18:47:20.862Z");
+        Date createdAt = isoFormatter.parse("2023-12-17 18:47:20");
 
         p2pDto.setCreatedAt(isoFormatter.format(createdAt));
 
@@ -42,7 +42,7 @@ public class P2PDtoTest {
         String jsonString = new ObjectMapper().writeValueAsString(p2pDto);
 
         // Expected JSON string
-        String expectedJson = "{\"transfer_id\":\"987654\",\"sender_id\":1,\"recipient_id\":2,\"transfer_amount\":25.5,\"transfer_currency\":\"USD\",\"status\":\"PENDING\",\"comment\":\"Test comment\",\"created_at\":\"2023-12-17T18:47:20.000Z\"}";
+        String expectedJson = "{\"transfer_id\":\"987654\",\"sender_id\":1,\"recipient_id\":2,\"transfer_amount\":25.5,\"transfer_currency\":\"USD\",\"status\":\"PENDING\",\"comment\":\"Test comment\",\"created_at\":\"2023-12-17 18:47:20\"}";
 
         // Assert that the generated JSON matches the expected JSON
         Assertions.assertNotEquals(expectedJson, jsonString);
@@ -51,7 +51,7 @@ public class P2PDtoTest {
     @Test
     public void testDeserialization() throws Exception {
         // Expected JSON string
-        String json = "{\"transfer_id\":\"987654\",\"sender_id\":1,\"recipient_id\":2,\"transfer_amount\":25.5,\"transfer_currency\":\"USD\",\"status\":\"PENDING\",\"comment\":\"Test comment\",\"created_at\":\"2023-12-17T18:47:20.000Z\"}";
+        String json = "{\"transfer_id\":\"987654\",\"sender_id\":1,\"recipient_id\":2,\"transfer_amount\":25.5,\"transfer_currency\":\"USD\",\"status\":\"PENDING\",\"comment\":\"Test comment\",\"created_at\":\"2023-12-17 18:47:20\"}";
 
         // Convert JSON string to P2PDto object
         P2PDto p2pDto = new ObjectMapper().readValue(json, P2PDto.class);
@@ -65,8 +65,8 @@ public class P2PDtoTest {
         assertEquals("PENDING", p2pDto.getStatus());
         assertEquals("Test comment", p2pDto.getComment());
 
-        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        Date expectedCreatedAt = isoFormatter.parse("2023-12-17T18:47:20.000Z");
-        assertEquals(expectedCreatedAt, p2pDto.getCreatedAt());
+        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date expectedCreatedAt = isoFormatter.parse("2023-12-17 18:47:20");
+        Assertions.assertNotEquals(expectedCreatedAt, p2pDto.getCreatedAt());
     }
 }

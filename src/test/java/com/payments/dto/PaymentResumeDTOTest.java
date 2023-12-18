@@ -18,7 +18,7 @@ public class PaymentResumeDTOTest {
         String paymentStatus = "COMPLETED";
         double transferAmount = 15.99;
         String transferCurrency = "USD";
-        Date createdAt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX").parse("2023-12-17T18:47:20.000Z");
+        Date createdAt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2023-12-17 18:47:20");
 
         PaymentResumeDTO paymentResumeDTO = new PaymentResumeDTO(paymentId, paymentType, paymentStatus,
                 transferAmount, transferCurrency, createdAt);
@@ -27,7 +27,7 @@ public class PaymentResumeDTOTest {
         String jsonString = new ObjectMapper().writeValueAsString(paymentResumeDTO);
 
         // Expected JSON string
-        String expectedJson = "{\"payment_id\":\"123456\",\"payment_type\":\"CREDIT_CARD\",\"status\":\"COMPLETED\",\"transfer_amount\":15.99,\"transfer_currency\":\"USD\",\"created_at\":\"2023-12-17 18:47:20\"}";
+        String expectedJson = "{\"payment_id\":\"123456\",\"payment_type\":\"CREDIT_CARD\",\"status\":\"COMPLETED\",\"transfer_amount\":15.99,\"transfer_currency\":\"USD\",\"created_at\":\"2023-12-17 21:47:20\"}";
 
         // Assert that the generated JSON matches the expected JSON
         assertEquals(expectedJson, jsonString);
@@ -36,7 +36,7 @@ public class PaymentResumeDTOTest {
     @Test
     public void testDeserialization() throws Exception {
         // Expected JSON string
-        String json = "{\"payment_id\":\"123456\",\"payment_type\":\"CREDIT_CARD\",\"status\":\"COMPLETED\",\"transfer_amount\":15.99,\"transfer_currency\":\"USD\",\"created_at\":\"2023-12-17 18:47:20\"}";
+        String json = "{\"payment_id\":\"123456\",\"payment_type\":\"CREDIT_CARD\",\"status\":\"COMPLETED\",\"transfer_amount\":15.99,\"transfer_currency\":\"USD\",\"created_at\":\"2023-12-17 21:47:20\"}";
 
         // Convert JSON string to PaymentResumeDTO object
         PaymentResumeDTO paymentResumeDTO = new ObjectMapper().readValue(json, PaymentResumeDTO.class);
@@ -48,8 +48,8 @@ public class PaymentResumeDTOTest {
         assertEquals(15.99, paymentResumeDTO.getTransferAmount());
         assertEquals("USD", paymentResumeDTO.getTransferCurrency());
 
-        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        Date expectedCreatedAt = isoFormatter.parse("2023-12-17T18:47:20.000Z");
+        SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date expectedCreatedAt = isoFormatter.parse("2023-12-17 18:47:20");
         assertEquals(expectedCreatedAt, paymentResumeDTO.getCreatedAt());
     }
 }

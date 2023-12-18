@@ -98,14 +98,14 @@ public class PaymentsControllerTest {
 
     @Test
     public void testGetAllPaymentsFlux() throws Exception {
-        Set<PaymentParametersDTO> mockPayments  = mock(HashSet.class);
+        List<PaymentResumeDTO> mockPayments  = mock(List.class);
 
-        when(paymentsService.fetchAllPayments()).thenReturn(mockPayments);
+        when(paymentsService.fetchPaymentsResume()).thenReturn(mockPayments);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(paymentController).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/payments/list_flux"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        verify(paymentsService, times(1)).fetchAllPayments();
+        verify(paymentsService, times(1)).fetchPaymentsResume();
     }
 }
 

@@ -42,7 +42,7 @@ public class P2PControllerTest {
         String jsonPayload = objectMapper.writeValueAsString(payment);
 
         when(paymentsService.validateList(anyList())).thenReturn(true);
-        when(paymentsService.processBatchPayments(eq(Constants.P2P_PAYMENT_TYPE), anyList())).thenReturn(1);
+        when(paymentsService.processBatchPayments(eq(Constants.P2P_PAYMENT_TYPE), anyList(), anyString())).thenReturn(1);
 
         p2pController = new P2PController();
         p2pController.paymentsService = paymentsService;
@@ -51,13 +51,14 @@ public class P2PControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/p2p/pay")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonPayload))
+                .content(jsonPayload)
+                .header("Idempotency-Key", "yourIdempotencyKey5")) // Add this line)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Payment processed successfully."));
 
 
         verify(paymentsService, times(1)).validateList(anyList());
-        verify(paymentsService, times(1)).processBatchPayments(eq(Constants.P2P_PAYMENT_TYPE), anyList());
+        verify(paymentsService, times(1)).processBatchPayments(eq(Constants.P2P_PAYMENT_TYPE), anyList(), anyString());
     }
 
     @Test
@@ -70,7 +71,7 @@ public class P2PControllerTest {
         String jsonPayload = objectMapper.writeValueAsString(Arrays.asList(payment));
 
         when(paymentsService.validateList(anyList())).thenReturn(true);
-        when(paymentsService.processBatchPayments(eq(Constants.P2P_PAYMENT_TYPE), anyList())).thenReturn(1);
+        when(paymentsService.processBatchPayments(eq(Constants.P2P_PAYMENT_TYPE), anyList(), anyString())).thenReturn(1);
 
         p2pController = new P2PController();
         p2pController.paymentsService = paymentsService;
@@ -79,12 +80,13 @@ public class P2PControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/p2p/batch_payment")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonPayload))
+                .content(jsonPayload)
+                .header("Idempotency-Key", "yourIdempotencyKey6")) // Add this line)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("You sent 1 payment(s). 1 Of those might be processed. 0 were already processed or contain errors."));
 
         verify(paymentsService, times(1)).validateList(anyList());
-        verify(paymentsService, times(1)).processBatchPayments(eq(Constants.P2P_PAYMENT_TYPE), anyList());
+        verify(paymentsService, times(1)).processBatchPayments(eq(Constants.P2P_PAYMENT_TYPE), anyList(), anyString());
     }
 
     @Test

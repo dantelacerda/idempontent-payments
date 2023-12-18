@@ -11,10 +11,12 @@ public class PaymentsRepository {
     private static final PaymentsRepository instance = new PaymentsRepository();
     private final Set<PaymentParametersDTO> paymentsList;
     private final Set<String> processedPaymentsIds;
+    private final Set<String> idempontencyIds;
 
     private PaymentsRepository() {
         this.paymentsList = new HashSet<>();
         this.processedPaymentsIds = new HashSet<>();
+        this.idempontencyIds = new HashSet<>();
     }
 
     public static PaymentsRepository getInstance() {
@@ -32,6 +34,14 @@ public class PaymentsRepository {
         paymentsList.add(item);
         processedPaymentsIds.add(item.getPaymentId());
     }
+
+    public void addIdempontentId(String idempontentId) {
+        idempontencyIds.add(idempontentId);
+    }
+    public Set<String> listExecutedOperations() {
+        return Collections.unmodifiableSet(idempontencyIds);
+    }
+
 
     public void deletePayment(PaymentParametersDTO item) {
         paymentsList.remove(item);
