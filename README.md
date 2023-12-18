@@ -42,9 +42,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-That project covers three Payment forms.One for deposits (top-ups),
-one for users, one for card payments. With that project you can face the emerging challenge of aggregating and organizing user
-activities from different sources.
+All that project was developed under the principles of SOLID. This is a set of governing principles for software engineers to adhere to create consistent, reliable, maintainable and expandable software. That project covers three Payment forms: One for deposits (top-ups),
+one for P2P and one for Card Payments. With that project you can face the emerging challenge of aggregating and organizing user
+activities from different sources. 
 This projects’s goal is to provide an API to users create their payments and be able to consume it eighter by type or all together. Some important insights about the project will be given on next steps.
 
 - Scalable with Spring Webflux
@@ -195,6 +195,10 @@ P2P Transfer
 <!-- ROADMAP -->
 ## Roadmap
 
+- [x] Requests by 3 types separated in controllers
+- [x] Payment class to gather all 3 types
+- [x] Reactive method to return items based on need, adding scalability
+- [x] Unit Tests and Integration tests on everything
 - [x] Add Reconciliation Controller By File
 - [ ] Add Rules to Reconciliation
 - [ ] Add a DLQ to Reproccess Payments
