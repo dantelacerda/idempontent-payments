@@ -39,8 +39,8 @@ public class PaymentsController {
     }
 
     @GetMapping("/list_flux")
-    public Flux<PaymentParametersDTO> getAllPaymentsFlux() {
-        Set<PaymentParametersDTO> payments = paymentsService.fetchAllPayments();
+    public Flux<PaymentResumeDTO> getAllPaymentsFlux() {
+        List<PaymentResumeDTO> payments = paymentsService.fetchPaymentsResume();
         return Flux.fromIterable(payments);
     }
 

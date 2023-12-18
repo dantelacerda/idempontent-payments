@@ -96,11 +96,18 @@ public class P2PDto extends PaymentParametersDTO {
 
     public void setCreatedAt(String createdAt) {
         try {
-            SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             this.createdAt = isoFormatter.parse(createdAt);
         } catch (ParseException e) {
-            e.printStackTrace(); // Handle parsing exception as needed
+            e.printStackTrace();
+            try {
+                SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+                isoFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+                this.createdAt = isoFormatter.parse(createdAt);
+            } catch (ParseException e2) {
+                e2.printStackTrace();
+            }
         }
     }
 }
